@@ -6,7 +6,7 @@ Headers for functions in abstract board for simple tic-tac-toe-like games, 2021.
 Intended for Grau en Intel-ligencia Artificial, Programacio i Algorismes 1.
 I would prefer to do everything in terms of object-oriented programming though.
 """
-#prueba
+
 # Import: 
 # color GRAY; PLAYER_COLOR, NO_PLAYER
 # board dimension BSIZ
