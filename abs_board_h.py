@@ -21,12 +21,12 @@ Stone = namedtuple('Stone', ('x', 'y', 'color'))
 
 def set_board_up(stones_per_player = 4):
     'Init stones and board, prepare functions to provide, act as their closure'
-
     # init board and game data here
-
+    
+    stones_played = []
     def stones():
         "return iterable with the stones already played"
-        stones_played = []
+        
         return stones_played
 
     def select_st(i, j):
