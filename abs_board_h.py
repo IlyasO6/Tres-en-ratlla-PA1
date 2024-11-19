@@ -6,7 +6,7 @@ Headers for functions in abstract board for simple tic-tac-toe-like games, 2021.
 Intended for Grau en Intel-ligencia Artificial, Programacio i Algorismes 1.
 I would prefer to do everything in terms of object-oriented programming though.
 """
-
+#prueba
 # Import: 
 # color GRAY; PLAYER_COLOR, NO_PLAYER
 # board dimension BSIZ
@@ -15,6 +15,7 @@ from constants import PLAYER_COLOR, BSIZ, NO_PLAYER, GRAY
 # Data structure for stones
 from collections import namedtuple
 
+#  exemple de stone: Stone(1, 2, PLAYER_COLOR[0])
 Stone = namedtuple('Stone', ('x', 'y', 'color'))
 
 
@@ -25,7 +26,8 @@ def set_board_up(stones_per_player = 4):
 
     def stones():
         "return iterable with the stones already played"
-        pass
+        stones_played = []
+        return stones_played
 
     def select_st(i, j):
         '''
