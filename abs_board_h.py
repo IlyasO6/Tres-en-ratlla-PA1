@@ -40,7 +40,11 @@ def set_board_up(stones_per_player = 4):
 
     def end():
         'Test whether there are 3 aligned stones'
-        pass
+        diagonal = []
+        antidiagonal = []
+        columnas = []
+        filas = []
+        
 
     def move_st(i, j):
         '''If valid square, move there selected stone and unselect it,
