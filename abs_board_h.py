@@ -24,7 +24,7 @@ def set_board_up(stones_per_player = 4):
     # init board and game data here
     
     stones_played = []
-    def stones():
+    def stones() -> list:
         "return iterable with the stones already played"
         
         return stones_played
@@ -38,7 +38,7 @@ def set_board_up(stones_per_player = 4):
         '''
         pass
 
-    def end():
+    def end() -> bool:
         'Test whether there are 3 aligned stones'
         diagonal = []
         antidiagonal = []
