@@ -16,3 +16,6 @@ while True:
         pass
 
     count += 1
+
+def check_winner(player):
+    pass
