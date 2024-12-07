@@ -22,12 +22,21 @@ Stone = namedtuple('Stone', ('x', 'y', 'color'))
 def set_board_up(stones_per_player = 4):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
-    
-    stones_played = []
+
+    board_matrix = [[0]*3]*3
+    played_stones = []
+    unplayed_stones = []
+    current_player = 0
+    for _ in range(stones_per_player):
+        unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[0]))
+        unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[1]))
+
+    selected_stone = unplayed_stones[0]
+    turn = 0
     def stones() -> list:
         "return iterable with the stones already played"
         
-        return stones_played
+        return played_stones
 
     def select_st(i, j):
         '''
@@ -36,7 +45,18 @@ def set_board_up(stones_per_player = 4):
         To be called only after all stones played.
         Report success by returning a boolean;
         '''
-        pass
+        nonlocal played_stones, selected_stone
+        yes = False
+        for stone in played_stones:
+            if stone.x == i and stone.y == j and stone.color == PLAYER_COLOR[current_player]:
+                selected_stone = stone
+                played_stones.remove(stone)
+                yes = True
+        
+        if not yes: print("Esta no")
+
+
+        return selected_stone
 
     def end() -> bool:
         'Test whether there are 3 aligned stones'
@@ -55,7 +75,31 @@ def set_board_up(stones_per_player = 4):
         already selected, current player, and boolean indicating
         the end of the game.
         '''
-        pass
+        nonlocal selected_stone, played_stones, unplayed_stones, current_player, turn
+
+        for stones in played_stones:
+            if stones.x == i and stones.y == j:
+                print("Aqui no")
+                return True, current_player, False
+
+        selected_stone = selected_stone._replace(x = i, y = j)
+        played_stones.append(selected_stone)
+        
+        #  afegim la pedra a 
+
+
+        current_player = (current_player + 1) % 2
+        
+        if turn < 7:
+            unplayed_stones.pop(0)
+            selected_stone = unplayed_stones[0]
+        else:
+            print("no quedan piezas")
+            selected_stone = 0
+            return False, current_player, False
+        
+        turn += 1
+        return True, current_player, False
 
     def draw_txt(end = False):
         'Use ASCII characters to draw the board.'
@@ -64,3 +108,9 @@ def set_board_up(stones_per_player = 4):
     # return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
 
+
+
+stone1 = Stone(1, 2, PLAYER_COLOR[0])
+stone1 = stone1._replace(x = 0, y = 5)
+
+print(stone1)
