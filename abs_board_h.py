@@ -51,49 +51,38 @@ def set_board_up(stones_per_player = 4):
         To be called only after all stones played.
         Report success by returning a boolean;
         '''
-        #  S'executa aquesta funció quan totes les pedres ja estan jugades
-        nonlocal played_stones, selected_stone
+        nonlocal selected_stone
 
         for stone in played_stones:
             #  comprovem quina pedra s'ha premut (comparant les coordenadas donades) i que sigui del jugador actual
             if stone.x == i and stone.y == j and stone.color == PLAYER_COLOR[current_player]:
                 #  si ho és, la guardem com a selected_stone
                 selected_stone = stone
+        
         return selected_stone
 
     def end() -> bool:
         'Test whether there are 3 aligned stones'
-        winner = False
-        
-        #  en la diagonal:
-        for i in range(len(board_matrix)):
-            if board_matrix[i][i]==current_player+1:
-                winner = True
-            else:
-                winner = False
-                break
-        
-        #  en la antidiagonal:
-        if not winner:
-            for i in range(len(board_matrix)):
-                if board_matrix[i][-1-i]==current_player+1:
-                    winner = True
-                else:
-                    winner = False
-                    break
+        #  en les files:
+        for x in range(len(board_matrix)):
+            if board_matrix[x][0] == board_matrix[x][1] == board_matrix[x][2] != 0:
+                return True
         
         #  en les columnes:
         for y in range(len(board_matrix)):
-            if board_matrix[0][y]==board_matrix[1][y]==board_matrix[2][y]==current_player+1:
-                winner = True
+            if board_matrix[0][y] == board_matrix[1][y] == board_matrix[2][y] != 0:
+                return True
+    
+        #  en la diagonal:
+        if board_matrix[0][0] == board_matrix[1][1] == board_matrix[2][2] != 0:
+            return True
         
-        #  en les files:
-        for x in range(len(board_matrix)):
-            if board_matrix[x][0]==board_matrix[x][1]==board_matrix[x][2]==current_player+1:
-                winner = True
-        return winner
-        
+        #  en la antidiagonal:
+        if board_matrix[0][2] == board_matrix[1][1] == board_matrix[2][0] != 0:
+            return True
 
+        return False
+    
     def move_st(i, j):
         '''If valid square, move there selected stone and unselect it,
         then check for end of game, then select new stone for next
@@ -111,40 +100,37 @@ def set_board_up(stones_per_player = 4):
         
         #  comprovem si la casella on volem col·locar està ocupada comparant cada pedra de les jugades amb les
         #  coordenades de la casella
+        print(i < 0 or i > 2 or j < 0 or j > 2)
         for stones in played_stones:
             if stones.x == i and stones.y == j:
                 return True, current_player, False
-                #  stone_selected es True, curr_player es current_player, end es False
 
-        #  Quan ja hem comprovat que la pedra seleccionada és vàlida i la casella seleccionada està lliure
-        if turn > 7:
-            #  Treiem la pedra de la llista de pedres jugades
+        #  Quan ja hem comprovat que la pedra seleccionada és vàlida i la casella seleccionada està lliure,
+        #  afegim la pedra a la matriu del tauler i a la llista de pedres jugades amb les noves coordenades:
+        board_matrix[i][j] = current_player + 1
+        if turn > 7: 
             played_stones.remove(selected_stone)
-        #  Afegim la pedra a la llista de pedres jugades amb les noves coordenades
+        
         selected_stone = selected_stone._replace(x = i, y = j)
         played_stones.append(selected_stone)
-        
-        #  afegim la pedra a 
-        board_matrix[i][j] = current_player+1
-        #  comprovem si el jugador actual ha guanyat i guardem el resultat de end()
-        fi = end()
-        #  Canviem de jugador
-        current_player = (current_player + 1) % 2
-        #  quan encara no estan totes les pedres jugades
+
+        #  quan encara no estan totes les pedres jugades:
         if turn < 7:
-            #  eliminem de la llista de pedres no jugades la primera pedra, si encara no estan totes les pedres jugades
-            unplayed_stones.pop(0)
-            #  seleccionem la següent pedra de la llista
-            selected_stone = unplayed_stones[0]
-        else:
-            #  ja estan totes les pedres col·locades
+            unplayed_stones.pop(0) #  eliminem de la llista de pedres no jugades la primera pedra
+            selected_stone = unplayed_stones[0] #  seleccionem la següent pedra de la llista
+        
+        else: #  ja estan totes les pedres col·locades, per tant ja no seleccionem manualment
             selected_stone = 0
-            #  canviem el torn i retornem
-            turn += 1
-            return False, current_player, fi
-        #  canviem el torn i retornem
+
+        #  comprovem si algun jugador ha guanyat:
+        fi = end()
+        
+        #  Canviem de jugador i aumentem el torn:
+        current_player = (current_player + 1) % 2
         turn += 1
-        return True, current_player, fi
+
+        #  retornem els valors:
+        return selected_stone, current_player, fi
 
     def draw_txt(end = False):
         'Use ASCII characters to draw the board.'
