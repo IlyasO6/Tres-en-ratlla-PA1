@@ -142,10 +142,3 @@ def set_board_up(stones_per_player = 4):
 
     # return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
-
-
-
-stone1 = Stone(1, 2, PLAYER_COLOR[0])
-stone1 = stone1._replace(x = 0, y = 5)
-
-print(stone1)
