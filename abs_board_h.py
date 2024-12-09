@@ -23,11 +23,13 @@ def set_board_up(stones_per_player = 4):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
 
-    board_matrix = [[0]*3]*3
+    board_matrix = [[0 for _ in range(3)] for _ in range(3)]
+    print(board_matrix)
     played_stones = []
     unplayed_stones = []
     current_player = 0
     for _ in range(stones_per_player):
+        #creem 4 pedres per jugador, i les afegim a la llista de pedres no jugades, alternant colors
         unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[0]))
         unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[1]))
 
@@ -50,7 +52,7 @@ def set_board_up(stones_per_player = 4):
         for stone in played_stones:
             if stone.x == i and stone.y == j and stone.color == PLAYER_COLOR[current_player]:
                 selected_stone = stone
-                played_stones.remove(stone)
+                
                 yes = True
         
         if not yes: print("Esta no")
@@ -60,10 +62,36 @@ def set_board_up(stones_per_player = 4):
 
     def end() -> bool:
         'Test whether there are 3 aligned stones'
-        diagonal = []
-        antidiagonal = []
-        columnas = []
-        filas = []
+        winner = False
+        #diagonal
+        for i in range(len(board_matrix)):
+            if board_matrix[i][i]==current_player+1:
+                winner = True
+            else:
+                winner = False
+                break
+
+        #antidiagonal
+        if not winner:
+            for i in range(len(board_matrix)):
+                if board_matrix[i][-1-i]==current_player+1:
+                    winner = True
+                else:
+                    winner = False
+                    break
+
+        #columnes
+        for y in range(len(board_matrix)):
+            if board_matrix[0][y]==board_matrix[1][y]==board_matrix[2][y]==current_player+1:
+                winner = True
+                print("col")
+
+        #files
+        for x in range(len(board_matrix)):
+            if board_matrix[x][0]==board_matrix[x][1]==board_matrix[x][2]==current_player+1:
+                winner = True
+                print("fila")
+        return winner
         
 
     def move_st(i, j):
@@ -76,18 +104,24 @@ def set_board_up(stones_per_player = 4):
         the end of the game.
         '''
         nonlocal selected_stone, played_stones, unplayed_stones, current_player, turn
-
+        if i < 0 or i > 2 or j < 0 or j > 2:
+            print("Aqui no")
+            return True, current_player, False
         for stones in played_stones:
             if stones.x == i and stones.y == j:
                 print("Aqui no")
                 return True, current_player, False
-
+        if turn > 7:
+            played_stones.remove(selected_stone)
         selected_stone = selected_stone._replace(x = i, y = j)
         played_stones.append(selected_stone)
         
         #  afegim la pedra a 
-
-
+        print(board_matrix)
+        print(i, j)
+        board_matrix[i][j] = current_player+1
+        print(board_matrix)
+        fi = end()
         current_player = (current_player + 1) % 2
         
         if turn < 7:
@@ -96,10 +130,11 @@ def set_board_up(stones_per_player = 4):
         else:
             print("no quedan piezas")
             selected_stone = 0
-            return False, current_player, False
-        
+            turn += 1
+            return False, current_player, fi
         turn += 1
-        return True, current_player, False
+        
+        return True, current_player, fi
 
     def draw_txt(end = False):
         'Use ASCII characters to draw the board.'

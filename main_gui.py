@@ -17,7 +17,7 @@ from constants import *
 # set the height and width of the screen.
 pygame.init()
 screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
-pygame.display.set_caption("A name here for your game")
+pygame.display.set_caption("Tres en ratlla")
 clock = pygame.time.Clock() 
 
 # Import initialization of the separately programmed abstract board:
@@ -57,7 +57,7 @@ def draw_stone(screen, i, j, color):
 
 def draw_board(curr_player = 0, end = False):
     'on fresh screen, draw grid, stones, player turn mark, then make it appear'
-    screen.fill(WHITE if not end else GRAY)
+    screen.fill(WHITE if not end else REDDISH)
     for i in range(BSIZ):
         for j in range(BSIZ):
             draw_square(screen, i, j)
@@ -103,6 +103,7 @@ while not done:
             else:
                 "User should click on a stone to select it"
                 stone_selected = select_st(*trans_coord(*event.pos))
-
+        elif end: 
+            done = True
 # Friendly finish-up:
 pygame.quit()
