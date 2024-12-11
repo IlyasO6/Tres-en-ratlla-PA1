@@ -132,10 +132,24 @@ def set_board_up(stones_per_player = 4):
         #  retornem els valors:
         return selected_stone, current_player, fi
 
-    def draw_txt(end = False):
+    def draw_txt(x):
         'Use ASCII characters to draw the board.'
-        #  funcion del main txt
-        pass
+        #  funció del main txt
+        for i in range(len(board_matrix)):
+            for j in range(len(board_matrix[i])):
+                print(" ", end="")
+                if board_matrix[i][j] == 0:
+                    print(" ", end="")
+                elif board_matrix[i][j] == 1:
+                    print("X", end="")
+                else:
+                    print("O", end="")
+                if j<2:
+                    print(" ", end="")
+                    print("|", end="")
+            print()
+            if i<2:
+                print("---+---+---")
 
     #  return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
