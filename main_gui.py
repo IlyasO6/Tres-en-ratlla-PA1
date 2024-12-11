@@ -20,7 +20,7 @@ screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
 pygame.display.set_caption("Tres en ratlla")
 clock = pygame.time.Clock() 
 FONT_TITLE1 = pygame.font.SysFont('Verdana', 50)
-FONT_TITLE2 = pygame.font.SysFont('Verdana', 25)
+FONT_TITLE2 = pygame.font.SysFont('Calibri', 28)
 # Import initialization of the separately programmed abstract board:
 from abs_board_h import set_board_up
 
@@ -76,15 +76,25 @@ def draw_board(curr_player = 0, end = False):
     pygame.display.flip()
 
 def draw_game_over():
+    #  rectangle de Game Over (el mateix que el que mostrava el torn)
     width = BSIZ*(SEP + SLOT) - SEP
     height = SLOT
     x = ROOM + SEP
     y = BSIZ*(SEP + SLOT) + SEP
     pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height) )
 
+    #  botó de New Game
+    new_game_x = x + 100
+    new_game_y = y + 65
+    new_game_width = width - 200
+    new_game_height = height - 70
+    pygame.draw.rect(screen, (100, 100, 100), (new_game_x, new_game_y, new_game_width, new_game_height))
+
     screen.blit(FONT_TITLE1.render("GAME OVER", True, (0, 0, 0)), (x + 15, y))
-    
+    screen.blit(FONT_TITLE2.render("New Game", True, (255, 255, 255)), (x + 107, y + 68))
     pygame.display.flip()
+
+    return new_game_x, new_game_y, new_game_width, new_game_height
 
 
 # set_board_up() already selects a first stone; set curr_player to zero.
@@ -120,8 +130,30 @@ while not done:
             else:
                 "User should click on a stone to select it"
                 stone_selected = select_st(*trans_coord(*event.pos))
-        elif end: 
-            draw_game_over()
+        
+        if end: 
+            run = True
+            while run:
+                clock.tick(10)
+                x, y, width, height = draw_game_over()
+
+                mouse = pygame.mouse.get_pos()
+
+                for event in pygame.event.get():
+                    
+                    if event.type == pygame.QUIT:
+                        "User clicked 'close window', set flag to exit loop"
+                        done = True
+                        run = False
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        "game is afoot and user clicked something"
+
+                        #  si ha fet click al botó de New Game:
+                        if x <= mouse[0] <= x + width and y <= mouse[1] <= y + height:
+                            stones, select_st, move_st, draw_txt = set_board_up() #  reinicia tot
+                            draw_board()
+                            end = False
+                            run = False
 
 # Friendly finish-up:
 pygame.quit()
