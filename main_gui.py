@@ -19,7 +19,8 @@ pygame.init()
 screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
 pygame.display.set_caption("Tres en ratlla")
 clock = pygame.time.Clock() 
-
+FONT_TITLE1 = pygame.font.SysFont('Verdana', 50)
+FONT_TITLE2 = pygame.font.SysFont('Verdana', 25)
 # Import initialization of the separately programmed abstract board:
 from abs_board_h import set_board_up
 
@@ -57,7 +58,7 @@ def draw_stone(screen, i, j, color):
 
 def draw_board(curr_player = 0, end = False):
     'on fresh screen, draw grid, stones, player turn mark, then make it appear'
-    screen.fill(WHITE if not end else REDDISH)
+    screen.fill(WHITE if not end else (55, 55, 55))
     for i in range(BSIZ):
         for j in range(BSIZ):
             draw_square(screen, i, j)
@@ -65,10 +66,26 @@ def draw_board(curr_player = 0, end = False):
         draw_stone(screen, *s)
     if not end:
         'colored rectangle indicates who plays next'
-        pygame.draw.rect(screen, PLAYER_COLOR[curr_player], 
-        (ROOM + SEP, BSIZ*(SEP + SLOT) + SEP, BSIZ*(SEP + SLOT) - SEP, SLOT)
-        )
+        width = BSIZ*(SEP + SLOT) - SEP
+        height = SLOT
+        x = ROOM + SEP
+        y = BSIZ*(SEP + SLOT) + SEP
+        pygame.draw.rect(screen, PLAYER_COLOR[curr_player], (x, y, width, height))
+
+
     pygame.display.flip()
+
+def draw_game_over():
+    width = BSIZ*(SEP + SLOT) - SEP
+    height = SLOT
+    x = ROOM + SEP
+    y = BSIZ*(SEP + SLOT) + SEP
+    pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height) )
+
+    screen.blit(FONT_TITLE1.render("GAME OVER", True, (0, 0, 0)), (x + 15, y))
+    
+    pygame.display.flip()
+
 
 # set_board_up() already selects a first stone; set curr_player to zero.
 stone_selected = True
@@ -104,6 +121,7 @@ while not done:
                 "User should click on a stone to select it"
                 stone_selected = select_st(*trans_coord(*event.pos))
         elif end: 
-            done = True
+            draw_game_over()
+
 # Friendly finish-up:
 pygame.quit()
