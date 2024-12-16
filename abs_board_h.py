@@ -23,7 +23,7 @@ def set_board_up(stones_per_player = 4):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
 
-    board_matrix = [[0 for _ in range(3)] for _ in range(3)]
+    board_matrix = [[0 for _ in range(BSIZ)] for _ in range(BSIZ)]
     played_stones = []
     unplayed_stones = []
     current_player = 0
@@ -65,20 +65,20 @@ def set_board_up(stones_per_player = 4):
         'Test whether there are 3 aligned stones'
         #  en les files:
         for x in range(len(board_matrix)):
-            if board_matrix[x][0] == board_matrix[x][1] == board_matrix[x][2] != 0:
+            if board_matrix[x][0] == board_matrix[x][1] == board_matrix[x][2] == current_player + 1:
                 return True
         
         #  en les columnes:
         for y in range(len(board_matrix)):
-            if board_matrix[0][y] == board_matrix[1][y] == board_matrix[2][y] != 0:
+            if board_matrix[0][y] == board_matrix[1][y] == board_matrix[2][y] == current_player + 1:
                 return True
     
         #  en la diagonal:
-        if board_matrix[0][0] == board_matrix[1][1] == board_matrix[2][2] != 0:
+        if board_matrix[0][0] == board_matrix[1][1] == board_matrix[2][2] == current_player + 1:
             return True
         
         #  en la antidiagonal:
-        if board_matrix[0][2] == board_matrix[1][1] == board_matrix[2][0] != 0:
+        if board_matrix[0][2] == board_matrix[1][1] == board_matrix[2][0]  == current_player + 1:
             return True
 
         return False
@@ -95,12 +95,12 @@ def set_board_up(stones_per_player = 4):
         nonlocal selected_stone, played_stones, unplayed_stones, current_player, turn
         
         #  comprovem que s'ha premut dins del tauler:
-        if i < 0 or i > 2 or j < 0 or j > 2:
+        if i < 0 or i > (BSIZ - 1) or j < 0 or j > (BSIZ - 1):
             return True, current_player, False
         
         #  comprovem si la casella on volem col·locar està ocupada comparant cada pedra de les jugades amb les
         #  coordenades de la casella
-        print(i < 0 or i > 2 or j < 0 or j > 2)
+
         for stones in played_stones:
             if stones.x == i and stones.y == j:
                 return True, current_player, False
@@ -108,14 +108,17 @@ def set_board_up(stones_per_player = 4):
         #  Quan ja hem comprovat que la pedra seleccionada és vàlida i la casella seleccionada està lliure,
         #  afegim la pedra a la matriu del tauler i a la llista de pedres jugades amb les noves coordenades:
         board_matrix[i][j] = current_player + 1
-        if turn > 7: 
+        
+        
+        if turn > (stones_per_player * 2) - 1: 
+            board_matrix[selected_stone.x][selected_stone.y] = 0
             played_stones.remove(selected_stone)
         
         selected_stone = selected_stone._replace(x = i, y = j)
         played_stones.append(selected_stone)
-
+        
         #  quan encara no estan totes les pedres jugades:
-        if turn < 7:
+        if turn < (stones_per_player * 2) - 1:
             unplayed_stones.pop(0) #  eliminem de la llista de pedres no jugades la primera pedra
             selected_stone = unplayed_stones[0] #  seleccionem la següent pedra de la llista
         
@@ -124,7 +127,7 @@ def set_board_up(stones_per_player = 4):
 
         #  comprovem si algun jugador ha guanyat:
         fi = end()
-        
+
         #  Canviem de jugador i aumentem el torn:
         current_player = (current_player + 1) % 2
         turn += 1
@@ -132,24 +135,10 @@ def set_board_up(stones_per_player = 4):
         #  retornem els valors:
         return selected_stone, current_player, fi
 
-    def draw_txt(x):
+    def draw_txt(end = False):
         'Use ASCII characters to draw the board.'
-        #  funció del main txt
-        for i in range(len(board_matrix)):
-            for j in range(len(board_matrix[i])):
-                print(" ", end="")
-                if board_matrix[i][j] == 0:
-                    print(" ", end="")
-                elif board_matrix[i][j] == 1:
-                    print("X", end="")
-                else:
-                    print("O", end="")
-                if j<2:
-                    print(" ", end="")
-                    print("|", end="")
-            print()
-            if i<2:
-                print("---+---+---")
+        #  funcion del main txt
+        pass
 
     #  return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
