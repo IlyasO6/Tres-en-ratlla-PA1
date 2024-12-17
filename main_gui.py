@@ -21,6 +21,7 @@ pygame.display.set_caption("Tres en ratlla")
 clock = pygame.time.Clock() 
 FONT_TITLE1 = pygame.font.SysFont('Verdana', 50)
 FONT_TITLE2 = pygame.font.SysFont('Calibri', 28)
+
 # Import initialization of the separately programmed abstract board:
 from abs_board_h import set_board_up
 
@@ -36,7 +37,7 @@ from abs_board_h import set_board_up
 #     returns: bool "stone still selected", next player (may be the same), 
 #     and bool "end of game"
 #   the call to draw_txt(end) prints a text-based version of the board
-stones, select_st, move_st, draw_txt = set_board_up()
+stones, select_st, move_st, draw_txt = set_board_up(ST_PLAYER)
 
 # Grid:
 def trans_coord(x, y):
@@ -75,13 +76,13 @@ def draw_board(curr_player = 0, end = False):
 
     pygame.display.flip()
 
-def draw_game_over():
+def draw_game_over(winner):
     #  rectangle de Game Over (el mateix que el que mostrava el torn)
     width = BSIZ*(SEP + SLOT) - SEP
     height = SLOT
     x = ROOM + SEP
     y = BSIZ*(SEP + SLOT) + SEP
-    pygame.draw.rect(screen, (255, 255, 255), (x, y, width, height) )
+    pygame.draw.rect(screen, PLAYER_COLOR[winner - 1], (x, y, width, height) )
 
     #  botó de New Game
     new_game_x = x + 100
@@ -90,8 +91,8 @@ def draw_game_over():
     new_game_height = height - 70
     pygame.draw.rect(screen, (100, 100, 100), (new_game_x, new_game_y, new_game_width, new_game_height))
 
-    screen.blit(FONT_TITLE1.render("GAME OVER", True, (0, 0, 0)), (x + 15, y))
-    screen.blit(FONT_TITLE2.render("New Game", True, (255, 255, 255)), (x + 107, y + 68))
+    screen.blit(FONT_TITLE1.render("GAME OVER", True, WHITE), (x + 15, y))
+    screen.blit(FONT_TITLE2.render("New Game", True, WHITE), (x + 107, y + 68))
     pygame.display.flip()
 
     return new_game_x, new_game_y, new_game_width, new_game_height
@@ -135,7 +136,7 @@ while not done:
             run = True
             while run:
                 clock.tick(10)
-                x, y, width, height = draw_game_over()
+                x, y, width, height = draw_game_over(winner = end)
 
                 mouse = pygame.mouse.get_pos()
 
@@ -150,8 +151,9 @@ while not done:
 
                         #  si ha fet click al botó de New Game:
                         if x <= mouse[0] <= x + width and y <= mouse[1] <= y + height:
-                            stones, select_st, move_st, draw_txt = set_board_up() #  reinicia tot
+                            stones, select_st, move_st, draw_txt = set_board_up(ST_PLAYER) #  reinicia tot
                             draw_board()
+                            stone_selected = True
                             end = False
                             run = False
 
