@@ -112,8 +112,11 @@ def set_board_up(stones_per_player = 4):
         played_stones.append(selected_stone)
         selected_stone = 0
 
-        #  comprovem si algun jugador ha guanyat:
-        fi = end()
+        #  comprovem si algun jugador ha guanyat, en cas que sigui possible (si hi ha més de 4 pedres jugades):
+        if len(played_stones)>4:
+            fi = end()
+        else:
+            fi = False
 
         #  Canviem de jugador:
         current_player = (current_player + 1) % 2
