@@ -23,7 +23,7 @@ def set_board_up(stones_per_player = ST_PLAYER):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
 
-    board_matrix = [[0 for _ in range(BSIZ)] for _ in range(BSIZ)]
+    board_matrix = [['-' for _ in range(BSIZ)] for _ in range(BSIZ)]
     played_stones = list()
     unplayed_stones = list()
     current_player = 0
@@ -62,25 +62,25 @@ def set_board_up(stones_per_player = ST_PLAYER):
       #  en les files:
         for x in range(len(board_matrix)):
             for y in range(len(board_matrix)-2):
-                if board_matrix[x][y] == board_matrix[x][y+1] == board_matrix[x][y+2] != 0:
+                if board_matrix[x][y] == board_matrix[x][y+1] == board_matrix[x][y+2] != '-':
                     return current_player + 1
         
         #  en les columnes:
         for y in range(len(board_matrix)):
             for x in range(len(board_matrix)-2):
-                if board_matrix[x][y] == board_matrix[x+1][y] == board_matrix[x+2][y] != 0:
+                if board_matrix[x][y] == board_matrix[x+1][y] == board_matrix[x+2][y] != '-':
                     return current_player + 1
     
        #  en la diagonal:
         for x in range(len(board_matrix)-2):
             for y in range(len(board_matrix)-2):
-                if board_matrix[x][y] == board_matrix[x+1][y+1] == board_matrix[x+2][y+2] == current_player + 1:
+                if board_matrix[x][y] == board_matrix[x+1][y+1] == board_matrix[x+2][y+2] != '-':
                     return current_player + 1
         
         #  en la antidiagonal:
         for x in range(len(board_matrix)-2):
             for y in range(len(board_matrix)-2):
-                if board_matrix[x][y+2] == board_matrix[x+1][y+1] == board_matrix[x+2][y]  == current_player + 1:
+                if board_matrix[x][y+2] == board_matrix[x+1][y+1] == board_matrix[x+2][y]  != '-':
                     return current_player + 1
         return 0
     
@@ -96,16 +96,16 @@ def set_board_up(stones_per_player = ST_PLAYER):
         nonlocal selected_stone, played_stones, unplayed_stones, current_player
 
         #  comprovem si la casella on volem col·locar la pedra està dins del tauler o si està ocupada per una altra:
-        if i < 0 or i > (BSIZ - 1) or j < 0 or j > (BSIZ - 1) or board_matrix[i][j] != 0:
+        if i < 0 or i > (BSIZ - 1) or j < 0 or j > (BSIZ - 1) or board_matrix[i][j] != '-':
             return True, current_player, False
         
         #  afegim el jugador de la pedra seleccionada a la matriu del tauler:
-        board_matrix[i][j] = current_player + 1
+        board_matrix[i][j] = current_player
         
 
         if len(played_stones) >= stones_per_player * 2:
             #  si ja s'han jugat totes les pedres, eliminem les dades anteriors de la pedras seleccionada:
-            board_matrix[selected_stone.x][selected_stone.y] = 0
+            board_matrix[selected_stone.x][selected_stone.y] = '-'
             played_stones.remove(selected_stone)
         
         else:
@@ -137,10 +137,10 @@ def set_board_up(stones_per_player = ST_PLAYER):
             for j in range(len(board_matrix[i])):
                 print(" ", end="")
                 
-                if board_matrix[i][j] == 0:
+                if board_matrix[i][j] == '-':
                     print(" ", end="")
                 
-                elif board_matrix[i][j] == 1:
+                elif board_matrix[i][j] == 0:
                     print("X", end="")
                 
                 else:
