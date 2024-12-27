@@ -10,7 +10,7 @@ I would prefer to do everything in terms of object-oriented programming though.
 # Import: 
 # color GRAY; PLAYER_COLOR, NO_PLAYER
 # board dimension BSIZ
-from constants import PLAYER_COLOR, BSIZ, NO_PLAYER, GRAY
+from constants import PLAYER_COLOR, BSIZ, NO_PLAYER, GRAY, ST_PLAYER
 
 # Data structure for stones
 from collections import namedtuple
@@ -19,7 +19,7 @@ import time
 Stone = namedtuple('Stone', ('x', 'y', 'color'))
 
 
-def set_board_up(stones_per_player = 4):
+def set_board_up(stones_per_player = ST_PLAYER):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
 
@@ -103,7 +103,7 @@ def set_board_up(stones_per_player = 4):
         board_matrix[i][j] = current_player + 1
         
 
-        if len(played_stones) > 7:
+        if len(played_stones) >= stones_per_player * 2:
             #  si ja s'han jugat totes les pedres, eliminem les dades anteriors de la pedras seleccionada:
             board_matrix[selected_stone.x][selected_stone.y] = 0
             played_stones.remove(selected_stone)
@@ -127,7 +127,7 @@ def set_board_up(stones_per_player = 4):
         current_player = (current_player + 1) % 2
 
         #  retornem els valors:
-        return len(played_stones) <= 7, current_player, fi
+        return len(played_stones) < stones_per_player*2, current_player, fi
 
     def draw_txt(x):
         'Use ASCII characters to draw the board.'
