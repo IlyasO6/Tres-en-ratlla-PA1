@@ -115,8 +115,7 @@ def set_board_up(stones_per_player = ST_PLAYER):
         #  actualitzem les coordenades de la pedra seleccionada i l'afegim a la llista de pedres jugades:
         selected_stone = selected_stone._replace(x = i, y = j)
         played_stones.append(selected_stone)
-        selected_stone = 0
-
+        
         #  comprovem si algun jugador ha guanyat, en cas que sigui possible (si hi ha més de 4 pedres jugades):
         if len(played_stones)>4:
             fi = end()
