@@ -71,16 +71,17 @@ def set_board_up(stones_per_player = 4):
                 if board_matrix[x][y] == board_matrix[x+1][y] == board_matrix[x+2][y] != 0:
                     return current_player + 1
     
-        #  en la diagonal:
+       #  en la diagonal:
         for x in range(len(board_matrix)-2):
-            if board_matrix[x][x] == board_matrix[x+1][x+1] == board_matrix[x+2][x+2] != 0:
-                return current_player + 1
+            for y in range(len(board_matrix)-2):
+                if board_matrix[x][y] == board_matrix[x+1][y+1] == board_matrix[x+2][y+2] == current_player + 1:
+                    return current_player + 1
         
         #  en la antidiagonal:
         for x in range(len(board_matrix)-2):
-            if board_matrix[x][x+2] == board_matrix[x+1][x+1] == board_matrix[x+2][x]  != 0:
-                return current_player + 1
-        
+            for y in range(len(board_matrix)-2):
+                if board_matrix[x][y+2] == board_matrix[x+1][y+1] == board_matrix[x+2][y]  == current_player + 1:
+                    return current_player + 1
         return 0
     
     def move_st(i, j):
