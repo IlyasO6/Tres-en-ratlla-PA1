@@ -59,23 +59,27 @@ def set_board_up(stones_per_player = 4):
 
     def end() -> bool:
         'Test whether there are 3 aligned stones'
-        #  en les files:
+      #  en les files:
         for x in range(len(board_matrix)):
-            if board_matrix[x][0] == board_matrix[x][1] == board_matrix[x][2] == current_player + 1:
-                return current_player + 1
+            for y in range(len(board_matrix)-2):
+                if board_matrix[x][y] == board_matrix[x][y+1] == board_matrix[x][y+2] != 0:
+                    return current_player + 1
         
         #  en les columnes:
         for y in range(len(board_matrix)):
-            if board_matrix[0][y] == board_matrix[1][y] == board_matrix[2][y] == current_player + 1:
-                return current_player + 1
+            for x in range(len(board_matrix)-2):
+                if board_matrix[x][y] == board_matrix[x+1][y] == board_matrix[x+2][y] != 0:
+                    return current_player + 1
     
         #  en la diagonal:
-        if board_matrix[0][0] == board_matrix[1][1] == board_matrix[2][2] == current_player + 1:
-            return current_player + 1
+        for x in range(len(board_matrix)-2):
+            if board_matrix[x][x] == board_matrix[x+1][x+1] == board_matrix[x+2][x+2] != 0:
+                return current_player + 1
         
         #  en la antidiagonal:
-        if board_matrix[0][2] == board_matrix[1][1] == board_matrix[2][0]  == current_player + 1:
-            return current_player + 1
+        for x in range(len(board_matrix)-2):
+            if board_matrix[x][x+2] == board_matrix[x+1][x+1] == board_matrix[x+2][x]  != 0:
+                return current_player + 1
         
         return 0
     
