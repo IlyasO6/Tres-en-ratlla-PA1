@@ -131,14 +131,13 @@ def set_board_up(stones_per_player = ST_PLAYER):
         return len(played_stones) < stones_per_player*2, current_player, fi
 
 def draw_txt(x):
-        'Use ASCII characters to draw the board.'
+             'Use ASCII characters to draw the board.'
         #  funció del main txt
         # Imprimim els números de les columnes
         print("     |", end="")  # Espai inicial per alinear amb els nombres de fila
         for j in range(len(board_matrix)):
-            print(" ", j, " ", end="")  # Imprimim el número de columna
-            if j < len(board_matrix):
-                print("|", end="")
+            print(" ", j, " |", end="")  # Imprimim el número de columna
+
         print()
         # Imprimim la línia divisoria superior
         print("-----+" * (len(board_matrix)+1))
@@ -149,18 +148,14 @@ def draw_txt(x):
             # Imprimim els valors del taulell
             for j in range(len(board_matrix[i])):
                 if board_matrix[i][j] == NO_PLAYER:
-                    print("     ", end="")
+                    print("     |", end="")
                 elif board_matrix[i][j] == 0:
-                    print("  X  ", end="")
+                    print("  X  |", end="")
                 else:
-                    print("  O  ", end="")
-                # Afegim separadors de columna, per tots els elements
-                if j < len(board_matrix):
-                    print("|", end="")
+                    print("  O  |", end="")
             print()  # Afegim un salt de línia al final de cada fila
-                # Imprimim la línea divisoria entre files
-            if i < len(board_matrix):
-                print("-----+" * (len(board_matrix)+1))
+            # Imprimim la línea divisoria entre files, sumem 1 a len(board_matrix) perquè hem afegit una columna més
+            print("-----+" * (len(board_matrix)+1))
         # Afegim una linia separadora final
         print()
 
