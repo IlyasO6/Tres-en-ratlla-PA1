@@ -156,8 +156,6 @@ def draw_txt(x):
             print()  # Afegim un salt de línia al final de cada fila
             # Imprimim la línea divisoria entre files, sumem 1 a len(board_matrix) perquè hem afegit una columna més
             print("-----+" * (len(board_matrix)+1))
-        # Afegim una linia separadora final
-        print()
-
+            
     #  return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
