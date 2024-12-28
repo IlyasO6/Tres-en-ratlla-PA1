@@ -130,30 +130,39 @@ def set_board_up(stones_per_player = ST_PLAYER):
         #  retornem els valors:
         return len(played_stones) < stones_per_player*2, current_player, fi
 
-    def draw_txt(x):
+def draw_txt(x):
         'Use ASCII characters to draw the board.'
         #  funció del main txt
+        # Imprimim els números de les columnes
+        print("     |", end="")  # Espai inicial per alinear amb els nombres de fila
+        for j in range(len(board_matrix)):
+            print(" ", j, " ", end="")  # Imprimim el número de columna
+            if j < len(board_matrix):
+                print("|", end="")
+        print()
+        # Imprimim la línia divisoria superior
+        print("-----+" * (len(board_matrix)+1))
+
         for i in range(len(board_matrix)):
-            
+            # Imprimim el número de fila a l'inici de cada fila
+            print(" ", i, " |", end="")
+            # Imprimim els valors del taulell
             for j in range(len(board_matrix[i])):
-                print(" ", end="")
-                
                 if board_matrix[i][j] == NO_PLAYER:
-                    print(" ", end="")
-                
+                    print("     ", end="")
                 elif board_matrix[i][j] == 0:
-                    print("X", end="")
-                
+                    print("  X  ", end="")
                 else:
-                    print("O", end="")
-                
-                if j < 2:
-                    print(" ", end="")
+                    print("  O  ", end="")
+                # Afegim separadors de columna, per tots els elements
+                if j < len(board_matrix):
                     print("|", end="")
-            print()
-            
-            if i < 2:
-                print("---+---+---")
+            print()  # Afegim un salt de línia al final de cada fila
+                # Imprimim la línea divisoria entre files
+            if i < len(board_matrix):
+                print("-----+" * (len(board_matrix)+1))
+        # Afegim una linia separadora final
+        print()
 
     #  return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
