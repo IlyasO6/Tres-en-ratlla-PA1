@@ -131,7 +131,7 @@ def set_board_up(stones_per_player = ST_PLAYER):
         return len(played_stones) < stones_per_player*2, current_player, fi
 
     def draw_txt(x):
-             'Use ASCII characters to draw the board.'
+        'Use ASCII characters to draw the board.'
         #  funció del main txt
         # Imprimim els números de les columnes
         print("     |", end="")  # Espai inicial per alinear amb els nombres de fila
