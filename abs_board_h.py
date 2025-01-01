@@ -23,18 +23,19 @@ def set_board_up(stones_per_player = ST_PLAYER):
     'Init stones and board, prepare functions to provide, act as their closure'
     # init board and game data here
 
+    #  inicialitzem la matriu del tauler i les variables de joc:
     board_matrix = [[NO_PLAYER for _ in range(BSIZ)] for _ in range(BSIZ)]
     played_stones = list()
-    unplayed_stones = list()
-    current_player = 0
-    
-    #  creem 4 pedres per jugador, i les afegim a la llista de pedres no jugades, alternant colors:
-    for _ in range(stones_per_player):
-        unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[0]))
-        unplayed_stones.append(Stone(0, 0, PLAYER_COLOR[1]))
+    total_stones = 2 * stones_per_player
+    current_player = 0  
 
-    #  seleccionem la primera pedra
+    #  definim selected_stone per futurs usos:
     selected_stone: Stone
+
+    #  variables de dibuix del tauler en la funció draw_txt:
+    espai_buit = "     |"  
+    linea_divisoria = "\n" + "-----+" * (BSIZ + 1)
+    simbols = ["  X  |", "  O  |", espai_buit]
 
     def stones() -> list:
         "return iterable with the stones already played"
@@ -95,27 +96,24 @@ def set_board_up(stones_per_player = ST_PLAYER):
         already selected, current player, and boolean indicating
         the end of the game.
         '''
-        nonlocal selected_stone, played_stones, unplayed_stones, current_player
+        nonlocal selected_stone, played_stones, current_player
 
         #  comprovem si la casella on volem col·locar la pedra està dins del tauler o si està ocupada per una altra:
         if i < 0 or i > (BSIZ - 1) or j < 0 or j > (BSIZ - 1) or board_matrix[i][j] != NO_PLAYER:
             return True, current_player, False
         
-        #  afegim el jugador de la pedra seleccionada a la matriu del tauler:
-        board_matrix[i][j] = current_player
-        
-
-        if len(played_stones) >= stones_per_player * 2:
+        if len(played_stones) >= total_stones:
             #  si ja s'han jugat totes les pedres, eliminem les dades anteriors de la pedras seleccionada:
             board_matrix[selected_stone.x][selected_stone.y] = NO_PLAYER
             played_stones.remove(selected_stone)
+            selected_stone = selected_stone._replace(x = i, y = j)
         
         else:
             #  si no, seleccionem automaticament la següent pedra:
-            selected_stone = unplayed_stones.pop(0)
+            selected_stone = Stone(i, j, PLAYER_COLOR[current_player])
         
-        #  actualitzem les coordenades de la pedra seleccionada i l'afegim a la llista de pedres jugades:
-        selected_stone = selected_stone._replace(x = i, y = j)
+        #  actualitzem les coordenades de la pedra seleccionada i l'afegim a la llista de pedres jugades i a la matriu del tauler:
+        board_matrix[i][j] = current_player
         played_stones.append(selected_stone)
         
         #  comprovem si algun jugador ha guanyat, en cas que sigui possible (si hi ha més de 4 pedres jugades):
@@ -128,34 +126,28 @@ def set_board_up(stones_per_player = ST_PLAYER):
         current_player = (current_player + 1) % 2
 
         #  retornem els valors:
-        return len(played_stones) < stones_per_player*2, current_player, fi
-
+        return len(played_stones) < total_stones, current_player, fi
+    
     def draw_txt(x):
         'Use ASCII characters to draw the board.'
-        #  funció del main txt
-        # Imprimim els números de les columnes
-        print("     |", end="")  # Espai inicial per alinear amb els nombres de fila
-        for j in range(len(board_matrix)):
-            print(" ", j, " |", end="")  # Imprimim el número de columna
 
-        print()
+        print(espai_buit, end="")  # Espai inicial per alinear amb els nombres de fila
+        for i in range(BSIZ):
+            print(" ", i, " |", end="")  # Imprimim el número de columna
+
         # Imprimim la línia divisoria superior
-        print("-----+" * (len(board_matrix)+1))
+        print(linea_divisoria)
 
-        for i in range(len(board_matrix)):
+        for i in range(BSIZ):
             # Imprimim el número de fila a l'inici de cada fila
             print(" ", i, " |", end="")
+        
             # Imprimim els valors del taulell
-            for j in range(len(board_matrix[i])):
-                if board_matrix[i][j] == NO_PLAYER:
-                    print("     |", end="")
-                elif board_matrix[i][j] == 0:
-                    print("  X  |", end="")
-                else:
-                    print("  O  |", end="")
-            print()  # Afegim un salt de línia al final de cada fila
+            for j in range(BSIZ):
+                print(simbols[ board_matrix[i][j] ], end="")
+
             # Imprimim la línea divisoria entre files, sumem 1 a len(board_matrix) perquè hem afegit una columna més
-            print("-----+" * (len(board_matrix)+1))
+            print(linea_divisoria)
             
     #  return these 4 functions to make them available to the main program
     return stones, select_st, move_st, draw_txt
