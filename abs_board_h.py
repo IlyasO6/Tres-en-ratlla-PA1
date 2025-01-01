@@ -63,26 +63,26 @@ def set_board_up(stones_per_player = ST_PLAYER):
     def end() -> bool:
         'Test whether there are 3 aligned stones'
       #  en les files:
-        for x in range(len(board_matrix)):
-            for y in range(len(board_matrix)-2):
+        for x in range(BSIZ):
+            for y in range(BSIZ-2):
                 if board_matrix[x][y] == board_matrix[x][y+1] == board_matrix[x][y+2] != NO_PLAYER:
                     return current_player + 1
         
         #  en les columnes:
-        for y in range(len(board_matrix)):
-            for x in range(len(board_matrix)-2):
+        for y in range(BSIZ):
+            for x in range(BSIZ-2):
                 if board_matrix[x][y] == board_matrix[x+1][y] == board_matrix[x+2][y] != NO_PLAYER:
                     return current_player + 1
     
        #  en la diagonal:
-        for x in range(len(board_matrix)-2):
-            for y in range(len(board_matrix)-2):
+        for x in range(BSIZ-2):
+            for y in range(BSIZ-2):
                 if board_matrix[x][y] == board_matrix[x+1][y+1] == board_matrix[x+2][y+2] != NO_PLAYER:
                     return current_player + 1
         
         #  en la antidiagonal:
-        for x in range(len(board_matrix)-2):
-            for y in range(len(board_matrix)-2):
+        for x in range(BSIZ-2):
+            for y in range(BSIZ-2):
                 if board_matrix[x][y+2] == board_matrix[x+1][y+1] == board_matrix[x+2][y]  != NO_PLAYER:
                     return current_player + 1
         return 0
